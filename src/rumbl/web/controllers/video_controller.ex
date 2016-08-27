@@ -5,12 +5,12 @@ defmodule Rumbl.VideoController do
 
   plug :scrub_params, "video" when action in [:create, :update]
 
-  def index(conn, _params) do
+  def index(conn, _params, user) do
     videos = Repo.all(Video)
     render(conn, "index.html", videos: videos)
   end
 
-  def new(conn, _params) do
+  def new(conn, _params, user) do
     changeset =
       conn.assigns.current_user
       |> build_assoc(:videos)
@@ -18,7 +18,7 @@ defmodule Rumbl.VideoController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"video" => video_params}) do
+  def create(conn, %{"video" => video_params}, user) do
     changeset = Video.changeset(%Video{}, video_params)
 
     case Repo.insert(changeset) do
@@ -31,18 +31,18 @@ defmodule Rumbl.VideoController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => id}, user) do
     video = Repo.get!(Video, id)
     render(conn, "show.html", video: video)
   end
 
-  def edit(conn, %{"id" => id}) do
+  def edit(conn, %{"id" => id}, user) do
     video = Repo.get!(Video, id)
     changeset = Video.changeset(video)
     render(conn, "edit.html", video: video, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "video" => video_params}) do
+  def update(conn, %{"id" => id, "video" => video_params}, user) do
     video = Repo.get!(Video, id)
     changeset = Video.changeset(video, video_params)
 
@@ -56,7 +56,7 @@ defmodule Rumbl.VideoController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
+  def delete(conn, %{"id" => id}, user) do
     video = Repo.get!(Video, id)
 
     # Here we use delete! (with a bang) because we expect
@@ -66,5 +66,10 @@ defmodule Rumbl.VideoController do
     conn
     |> put_flash(:info, "Video deleted successfully.")
     |> redirect(to: video_path(conn, :index))
+  end
+
+  def action(conn, _) do
+    apply(__MODULE__, action_name(conn),
+        [conn, conn.params, conn.assigns.current_user])
   end
 end
