@@ -3,6 +3,8 @@ defmodule Rumbl.VideoController do
 
   alias Rumbl.Video
 
+  plug :scrub_params, "video" when action in [:create, :update]
+
   def index(conn, _params) do
     videos = Repo.all(Video)
     render(conn, "index.html", videos: videos)
