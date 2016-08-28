@@ -10,7 +10,7 @@ defmodule Rumbl.TestHelpers do
 
     %Rumbl.User{}
     |> Rumbl.User.registration_changeset(changes)
-    |> Rumbl.insert!()
+    |> Repo.insert!()
   end
 
   def insert_video(user, attrs \\ %{}) do
