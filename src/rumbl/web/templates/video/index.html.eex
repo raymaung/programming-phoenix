@@ -19,8 +19,9 @@
       <td><%= video.title %></td>
       <td><%= video.description %></td>
       <td class="text-right">
-        <%= link "Watch", to: watch_path(@conn, :show, video),
-          class: "btn btn-default btn-xs" %>
+        <%= link "Watch",
+            to: watch_path(@conn, :show, "#{video.id}-#{video.slug}"),
+            class: "btn btn-default btn-xs" %>
 
         <%= link "Edit", to: video_path(@conn, :edit, video),
                          class: "btn btn-default btn-xs" %>
