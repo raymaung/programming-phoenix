@@ -1,10 +1,14 @@
 defmodule Rumbl.VideoControllerTest do
   use Rumbl.ConnCase
 
-  setup do
-    user = insert_user(username: "max")
-    conn = assign(conn(), :current_user, user)
-    {:ok, conn: conn, user: user}
+  setup %{conn: conn} = config do
+    if username = config[:login_as] do
+      user = insert_user(username: "max")
+      conn = assign(conn(), :current_user, user)
+      {:ok, conn: conn, user: user}
+    else
+      :ok
+    end
   end
 
   test "requires user authentication on all actions", %{conn: conn} do
@@ -22,6 +26,7 @@ defmodule Rumbl.VideoControllerTest do
     end)
   end
 
+  @tag login_as: "max"
   test "lists all user's videos on index", %{conn: conn, user: user} do
     user_video = insert_video(user, title: "funny cats")
     other_video = insert_video(insert_user(user: "other"), title: "another video")
