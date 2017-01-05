@@ -29,6 +29,11 @@ let Video = {
     })
 
     vidChannel.on("new_annotation", (resp) =>{
+      //
+      // vidChannel.params - sends to the server every time
+      // we call channel.join
+      //
+      vidChannel.params.last_seen_id = resp.id
       this.renderAnnotation(msgContainer, resp)
     })
 
@@ -42,6 +47,13 @@ let Video = {
 
     vidChannel.join()
       .receive("ok", (resp) => {
+        //
+        // Grab the max annotations in the response
+        //
+        let ids = resp.annotations.map(ann => ann.id)
+        if (ids.length > 0) {
+          vidChannel.params.last_seen_id = Math.max(...ids)
+        }
         this.scheduleMessages(msgContainer, resp.annotations);
       })
       .receive("ping", count => console.log("ping", count))
