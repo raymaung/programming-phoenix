@@ -16,8 +16,8 @@ defmodule Rumbl do
       # Start your own worker by calling: Rumbl.Worker.start_link(arg1, arg2, arg3)
       # worker(Rumbl.Worker, [arg1, arg2, arg3]),
 
-      # new counter worker
-      worker(Rumbl.Counter, [5])
+      # new supervisor
+      supervisor(Rumbl.InfoSys.Supervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
