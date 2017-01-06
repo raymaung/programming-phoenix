@@ -1,5 +1,16 @@
 # Rumbl
 
+
+# Development Set up Config
+
+* create `dev.secret.exs` with
+
+  ```
+  use Mix.Config
+
+  config :rumbl, :wolfram, app_id: "1234565-L9W3K9PA6V"
+  ```
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`
