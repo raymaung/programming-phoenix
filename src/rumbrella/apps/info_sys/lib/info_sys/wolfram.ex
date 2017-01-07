@@ -33,5 +33,5 @@ defmodule InfoSys.Wolfram do
     body
   end
 
-  defp app_id, do: Application.get_env(:rumbl, :wolfram)[:app_id]
+  defp app_id, do: Application.get_env(:info_sys, :wolfram)[:app_id]
 end
