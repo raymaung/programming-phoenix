@@ -17,7 +17,7 @@ defmodule Rumbl do
       # worker(Rumbl.Worker, [arg1, arg2, arg3]),
 
       # new supervisor
-      supervisor(Rumbl.InfoSys.Supervisor, [])
+      supervisor(InfoSys.Supervisor, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
