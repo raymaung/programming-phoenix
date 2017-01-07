@@ -1,9 +1,6 @@
 defmodule Rumbl.Video do
   use Rumbl.Web, :model
 
-  @required_fields ~w(url title description)
-  @optional_fields ~w(slug category_id)
-
   @primary_key {:id, Rumbl.Permalink, autogenerate: true}
 
   schema "videos" do
@@ -22,9 +19,10 @@ defmodule Rumbl.Video do
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, [:url, :title, :description, :slug, :category_id])
+    |> validate_required([:url, :title, :description])
     |> slugify_title()
     |> assoc_constraint(:category)
   end

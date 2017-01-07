@@ -10,8 +10,6 @@ defmodule Rumbl.UserRepoTest do
     attrs = Map.put(@valid_attrs, :username, "eric")
     changeset = User.changeset(%User{}, attrs)
     assert {:error, changeset} = Repo.insert(changeset)
-
-    # Not working
-    # assert {:username, "has already been taken"} in changeset.errors
+    assert {:username, {"has already been taken", []}} in changeset.errors
   end
 end
