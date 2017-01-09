@@ -15,6 +15,15 @@ defmodule InfoSysTest do
     def fetch("none", ref, owner, _limit) do
       send(owner, {:results, ref, []})
     end
+
+    def fetch("timeout", ref, owner, _limit) do
+      send(owner, {:backend, self()})
+
+      #
+      # simulate request taking long time with :infinity
+      #
+      :timer.sleep(:infinity)
+    end
   end
 
   test "compute/2 with backend results" do
@@ -24,5 +33,34 @@ defmodule InfoSysTest do
 
   test "compute/2 with no backend results" do
     assert [] = InfoSys.compute("none", backends: [TestBackend])
+  end
+
+  test "compute/2 with timeout returns no results and kills workder" do
+    #
+    # passing in specific string that make time out
+    # with 10 ms time out
+    #
+    results = InfoSys.compute("timeout", backends: [TestBackend], timeout: 10)
+    assert results == []
+
+    #
+    # Simutaneously verify message receive and
+    # match the result
+    #
+    assert_receive {:backend, backend_pid}
+
+    ref = Process.monitor(backend_pid)
+    assert_receive {:DOWN, ^ref, :process, _pid, _reason}
+
+    #
+    # Confirm no further :DOWN or :timeout messages
+    # are in the inbox.
+    #
+    # Notice: refute_received instead of refute_receieve
+    # as 'refute_receieve' waits for 100ms, and 'refute_receieved'
+    # asserts immediately.
+    #
+    refute_received {:DOWN, _, _, _, _}
+    refute_received :timeout
   end
 end
