@@ -24,6 +24,10 @@ defmodule InfoSysTest do
       #
       :timer.sleep(:infinity)
     end
+
+    def fetch("boom", _ref, _owner, _limit) do
+      raise "boom!"
+    end
   end
 
   test "compute/2 with backend results" do
@@ -60,6 +64,13 @@ defmodule InfoSysTest do
     # as 'refute_receieve' waits for 100ms, and 'refute_receieved'
     # asserts immediately.
     #
+    refute_received {:DOWN, _, _, _, _}
+    refute_received :timeout
+  end
+
+  @tag :capture_log
+  test "compute/2 discards backend errors" do
+    assert InfoSys.compute("boom", backends: [TestBackend]) == []
     refute_received {:DOWN, _, _, _, _}
     refute_received :timeout
   end
