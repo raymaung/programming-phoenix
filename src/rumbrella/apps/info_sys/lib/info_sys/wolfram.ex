@@ -32,8 +32,8 @@ defmodule InfoSys.Wolfram do
     {:ok, {_, _, body}} = @http.request(
       String.to_char_list(
         "http://api.wolframalpha.com/v2/query" <>
-        "?appid#{ app_id() }" <>
-        "&input=#{ URI.encode_www_form(query_str) }" <>
+        "?appid=#{ app_id() }" <>
+        "&input=#{ URI.encode_www_form(query_str) }"<>
         "&format=plaintext"
     ))
 
